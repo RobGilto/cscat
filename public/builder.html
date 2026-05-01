@@ -53,11 +53,11 @@
     max-height: 280px; overflow-y: auto;
   }
   .copy-btn {
-    background: var(--teal); color: #fff; border: none; border-radius: 6px;
+    background: #1F4E79; color: #fff; border: none; border-radius: 6px;
     padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer;
     margin-top: 8px;
   }
-  .copy-btn:hover { background: #3d97a3; }
+  .copy-btn:hover { background: #163C5C; }
   .copy-btn.copied { background: #16a34a; }
   .row { display: flex; gap: 8px; flex-wrap: wrap; }
   a { color: var(--teal); }
@@ -135,13 +135,18 @@ function buildUrl() {
 
 function buildEmailHtml(url, account) {
   const greeting = account ? `Hi ${account} team,` : 'Hi,';
-  return `<p>${greeting}</p>
-<p>Thank you for partnering with us on your Domo initiative. As we complete this phase of the engagement, we would greatly appreciate your feedback on both the delivery experience and the business impact of the solution.</p>
-<p>Your input helps us continuously improve how we design, implement, and support analytics solutions for our customers. This short survey will take less than two minutes to complete.</p>
-<p><a href="${url}" style="background:#4DABB8;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:600;display:inline-block">Take the 2-minute survey</a></p>
-<p>Or copy this link into your browser: <a href="${url}">${url}</a></p>
-<p>We sincerely value your perspective and appreciate your time.</p>
-<p>Best Regards,<br>Paul Basterfield<br>Senior Manager, Consulting &amp; Partner Services, APAC</p>`;
+  return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,sans-serif;font-size:14px;line-height:1.5;color:#1a1a1a;max-width:640px">
+<tr><td style="background:#9CC9E8;padding:24px;text-align:center"><img src="https://robgilto.github.io/cscat/domo-logo.png" alt="Domo" width="80" height="80" style="display:inline-block;border:0"></td></tr>
+<tr><td style="padding:24px 8px 0">
+<p style="margin:0 0 12px">${greeting}</p>
+<p style="margin:0 0 12px">Thank you for partnering with us on your Domo initiative. As we complete this phase of the engagement, we would greatly appreciate your feedback on both the delivery experience and the business impact of the solution.</p>
+<p style="margin:0 0 16px">Your input helps us continuously improve how we design, implement, and support analytics solutions for our customers. This short survey will take less than two minutes to complete.</p>
+<p style="margin:0 0 16px;text-align:center"><a href="${url}" style="background:#1F4E79;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;display:inline-block;font-size:15px">Take the 2-minute survey</a></p>
+<p style="margin:0 0 12px;font-size:13px;color:#6b7280">Or copy this link into your browser:<br><a href="${url}" style="color:#1F4E79;word-break:break-all">${url}</a></p>
+<p style="margin:0 0 12px">We sincerely value your perspective and appreciate your time.</p>
+<p style="margin:0">Best Regards,<br>Paul Basterfield<br>Senior Manager, Consulting &amp; Partner Services, APAC</p>
+</td></tr>
+</table>`;
 }
 
 function buildEmailText(url, account) {

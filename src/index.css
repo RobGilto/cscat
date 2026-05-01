@@ -148,7 +148,7 @@ textarea:focus {
 }
 
 .btn {
-  background: var(--domo-teal);
+  background: var(--domo-blue-dark);
   color: #fff;
   border: none;
   padding: 12px 28px;
@@ -159,7 +159,7 @@ textarea:focus {
   transition: background 0.12s;
 }
 
-.btn:hover:not(:disabled) { background: #3d97a3; }
+.btn:hover:not(:disabled) { background: #163C5C; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .error {
