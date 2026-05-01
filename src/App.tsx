@@ -173,7 +173,7 @@ export default function App() {
     <>
       <header className="brand-band">
         <img
-          src="https://i.imgur.com/9A42tMc.png"
+          src={`${import.meta.env.BASE_URL}domo-logo.png`}
           alt="Domo"
           className="brand-logo"
         />
