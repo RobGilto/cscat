@@ -151,17 +151,34 @@ export default function App() {
 
   if (submitted) {
     return (
-      <div className="page">
-        <div className="thanks">
-          <h2>Thank you</h2>
-          <p>Your feedback has been recorded. We appreciate your time.</p>
+      <>
+        <header className="brand-band">
+          <img
+            src={`${import.meta.env.BASE_URL}domo-logo.png`}
+            alt="Domo"
+            className="brand-logo"
+          />
+        </header>
+        <div className="page">
+          <div className="thanks">
+            <h2>Thank you</h2>
+            <p>Your feedback has been recorded. We appreciate your time.</p>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="page">
+    <>
+      <header className="brand-band">
+        <img
+          src="https://i.imgur.com/9A42tMc.png"
+          alt="Domo"
+          className="brand-logo"
+        />
+      </header>
+      <div className="page">
       <div className="header">
         <div className="header-bar" />
         <h1>We Value Your Feedback</h1>
@@ -241,6 +258,7 @@ export default function App() {
           {submitting ? 'Submitting…' : 'Submit feedback'}
         </button>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
