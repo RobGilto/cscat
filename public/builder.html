@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CSAT Survey — Link Builder (Internal)</title>
+<meta name="robots" content="noindex" />
+<style>
+  :root {
+    --teal: #4DABB8;
+    --bg: #f5f7f9;
+    --card: #fff;
+    --border: #e1e5ea;
+    --muted: #6b7280;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: #1a1a1a;
+    min-height: 100vh;
+  }
+  .page { max-width: 760px; margin: 0 auto; padding: 32px 20px 64px; }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .bar { width: 4px; height: 28px; background: var(--teal); border-radius: 2px; }
+  h1 { margin: 0; font-size: 22px; font-weight: 600; }
+  .sub { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  input[type=text] {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+    border-radius: 6px; font-size: 14px; font-family: inherit;
+  }
+  input:focus { outline: none; border-color: var(--teal); }
+  .field { margin-bottom: 14px; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .out-section { margin-top: 6px; }
+  .out-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin: 16px 0 6px; }
+  .out-box {
+    background: #f8fafc; border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px; font-family: ui-monospace, 'SF Mono', Monaco, monospace;
+    font-size: 13px; word-break: break-all; white-space: pre-wrap;
+    max-height: 280px; overflow-y: auto;
+  }
+  .copy-btn {
+    background: var(--teal); color: #fff; border: none; border-radius: 6px;
+    padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer;
+    margin-top: 8px;
+  }
+  .copy-btn:hover { background: #3d97a3; }
+  .copy-btn.copied { background: #16a34a; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; }
+  a { color: var(--teal); }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="bar"></div>
+    <h1>CSAT Survey — Link Builder</h1>
+  </div>
+  <div class="sub">Internal tool. Fill in project context, copy the URL + email body into your outbound email.</div>
+
+  <div class="card">
+    <div class="field">
+      <label for="project">Project name</label>
+      <input id="project" type="text" placeholder="e.g. Forty Winks Rebates Project" />
+      <div class="hint">Becomes <code>project_name</code> in the response row.</div>
+    </div>
+    <div class="field">
+      <label for="account">Customer account</label>
+      <input id="account" type="text" placeholder="e.g. Forty Winks" />
+      <div class="hint">Becomes <code>customer_account</code>.</div>
+    </div>
+    <div class="field">
+      <label for="contact">Customer contact email (optional)</label>
+      <input id="contact" type="text" placeholder="e.g. jane@fortywinks.com.au" />
+      <div class="hint">Becomes <code>customer_contact</code>. Leave blank for anonymous.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="out-label">Survey URL</div>
+    <div id="url-out" class="out-box">Fill in fields above…</div>
+    <div class="row">
+      <button class="copy-btn" data-copy="url-out">Copy URL</button>
+      <a id="open-link" class="copy-btn" style="text-decoration:none;display:none" target="_blank" rel="noopener">Open preview ↗</a>
+    </div>
+
+    <div class="out-label">Email body (HTML)</div>
+    <div id="email-html-out" class="out-box">—</div>
+    <button class="copy-btn" data-copy-html="email-html-out">Copy as rich HTML</button>
+
+    <div class="out-label">Email body (plain text fallback)</div>
+    <div id="email-text-out" class="out-box">—</div>
+    <button class="copy-btn" data-copy="email-text-out">Copy plain text</button>
+
+    <div class="out-label">Subject line</div>
+    <div id="subject-out" class="out-box">We Value Your Feedback</div>
+    <button class="copy-btn" data-copy="subject-out">Copy subject</button>
+  </div>
+</div>
+
+<script>
+const FORM_BASE = 'https://robgilto.github.io/cscat/';
+
+const $ = (id) => document.getElementById(id);
+const fields = ['project', 'account', 'contact'];
+
+function buildUrl() {
+  const project = $('project').value.trim();
+  const account = $('account').value.trim();
+  const contact = $('contact').value.trim();
+
+  if (!project && !account && !contact) return '';
+
+  const params = new URLSearchParams();
+  if (project) params.set('project', project);
+  if (account) params.set('account', account);
+  if (contact) params.set('contact', contact);
+  const qs = params.toString();
+  return qs ? `${FORM_BASE}?${qs}` : FORM_BASE;
+}
+
+function buildEmailHtml(url, account) {
+  const greeting = account ? `Hi ${account} team,` : 'Hi,';
+  return `<p>${greeting}</p>
+<p>Thank you for partnering with us on your Domo initiative. As we complete this phase of the engagement, we would greatly appreciate your feedback on both the delivery experience and the business impact of the solution.</p>
+<p>Your input helps us continuously improve how we design, implement, and support analytics solutions for our customers. This short survey will take less than two minutes to complete.</p>
+<p><a href="${url}" style="background:#4DABB8;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:600;display:inline-block">Take the 2-minute survey</a></p>
+<p>Or copy this link into your browser: <a href="${url}">${url}</a></p>
+<p>We sincerely value your perspective and appreciate your time.</p>
+<p>Best Regards,<br>Paul Basterfield<br>Senior Manager, Consulting &amp; Partner Services, APAC</p>`;
+}
+
+function buildEmailText(url, account) {
+  const greeting = account ? `Hi ${account} team,` : 'Hi,';
+  return `${greeting}
+
+Thank you for partnering with us on your Domo initiative. As we complete this phase of the engagement, we would greatly appreciate your feedback on both the delivery experience and the business impact of the solution.
+
+Your input helps us continuously improve how we design, implement, and support analytics solutions for our customers. This short survey will take less than two minutes to complete.
+
+Take the survey here: ${url}
+
+We sincerely value your perspective and appreciate your time.
+
+Best Regards,
+Paul Basterfield
+Senior Manager, Consulting & Partner Services, APAC`;
+}
+
+function update() {
+  const url = buildUrl();
+  const account = $('account').value.trim();
+  const urlOut = $('url-out');
+  const open = $('open-link');
+
+  if (!url) {
+    urlOut.textContent = 'Fill in fields above…';
+    $('email-html-out').textContent = '—';
+    $('email-text-out').textContent = '—';
+    open.style.display = 'none';
+    return;
+  }
+
+  urlOut.textContent = url;
+  open.href = url;
+  open.style.display = 'inline-block';
+  open.textContent = 'Open preview ↗';
+  $('email-html-out').textContent = buildEmailHtml(url, account);
+  $('email-text-out').textContent = buildEmailText(url, account);
+}
+
+fields.forEach((id) => $(id).addEventListener('input', update));
+
+document.querySelectorAll('[data-copy]').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const target = $(btn.dataset.copy);
+    try {
+      await navigator.clipboard.writeText(target.textContent);
+      const original = btn.textContent;
+      btn.textContent = 'Copied ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1500);
+    } catch (e) {
+      alert('Copy failed — select and copy manually');
+    }
+  });
+});
+
+document.querySelectorAll('[data-copy-html]').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const target = $(btn.dataset.copyHtml);
+    const html = target.textContent;
+    try {
+      const item = new ClipboardItem({
+        'text/html': new Blob([html], { type: 'text/html' }),
+        'text/plain': new Blob([html.replace(/<[^>]+>/g, '')], { type: 'text/plain' }),
+      });
+      await navigator.clipboard.write([item]);
+      const original = btn.textContent;
+      btn.textContent = 'Copied as rich HTML ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1500);
+    } catch (e) {
+      try {
+        await navigator.clipboard.writeText(html);
+        btn.textContent = 'Copied (plain HTML) ✓';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy as rich HTML'; btn.classList.remove('copied'); }, 1500);
+      } catch (e2) {
+        alert('Copy failed — select and copy manually');
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>
