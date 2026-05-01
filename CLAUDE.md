@@ -121,30 +121,30 @@ Customer email
 
 ## Action Plan
 
-### Phase 1 — Code complete (DONE)
+### Phase 1 — Code (DONE)
 - [x] Scaffold Vite + React + TS
 - [x] 6-question form with validation
 - [x] URL param capture
 - [x] Webhook POST + thank-you state
 - [x] GH Actions deploy workflow
-- [x] Build green, dev server running
 
-### Phase 2 — Domo backend (next)
-- [ ] Create DataSet `apac_csat_responses` with schema above (empty CSV upload or API)
-- [ ] Build Domo Workflow:
-  - Trigger: HTTP webhook
-  - Action: write incoming JSON row to DataSet via Stream API
-  - Confirm CORS allows browser POST
-- [ ] Capture webhook URL
-- [ ] Test with curl POST → verify row lands in DataSet
+### Phase 2 — Domo backend (DONE)
+- [x] JSON Webhook Connector created (Append, no secret/flattening)
+- [x] DataSet `apac_csat_responses` — ID `9c5e6633-c03f-41af-927d-748e6892c088`
+- [x] Webhook URL captured (stored in GH secret + .env.local, NOT committed)
+- [x] curl smoke test → 200, row lands
 
-### Phase 3 — Deploy
-- [ ] Create public GitHub repo `robgilto/cscat`
-- [ ] Push code
-- [ ] Add Actions secret `VITE_WEBHOOK_URL`
-- [ ] Enable GitHub Pages (Settings → Pages → source: GitHub Actions)
-- [ ] Verify deploy at `robgilto.github.io/cscat/`
-- [ ] End-to-end test: submit form → check DataSet
+### Phase 3 — Deploy (DONE)
+- [x] GitHub repo `RobGilto/cscat` (public)
+- [x] GH Actions secret `VITE_WEBHOOK_URL` set
+- [x] GH Pages enabled (source: GitHub Actions)
+- [x] Live: https://robgilto.github.io/cscat/
+- [x] End-to-end browser submit → 200 → row in DataSet
+- [x] CORS workaround: `mode: 'no-cors'` + `Content-Type: text/plain` skips preflight
+
+### Known constraints
+- Connector does not auto-materialize on POST. Schedule a run interval (15 min recommended) on DataSet settings, or manual Run.
+- `no-cors` mode = fire-and-forget, app cannot detect server failure. Acceptable for pilot. Cloudflare Worker proxy needed for real error handling.
 
 ### Phase 4 — Reporting
 - [ ] Build summary card: avg per question
