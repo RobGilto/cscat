@@ -30,7 +30,7 @@
     min-height: 110px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   }
-  .brand-logo { height: 80px; width: auto; max-width: 100%; object-fit: contain; display: block; }
+  .brand-logo { height: 80px; width: auto; max-width: 100%; object-fit: contain; display: block; background:#fff; padding:12px 20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
   .page { max-width: 760px; margin: 0 auto; padding: 32px 20px 64px; }
   .header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
   .bar { width: 4px; height: 28px; background: var(--teal); border-radius: 2px; }
@@ -85,6 +85,11 @@
       <div class="hint">Becomes <code>customer_account</code>.</div>
     </div>
     <div class="field">
+      <label for="contact_name">Customer contact name</label>
+      <input id="contact_name" type="text" placeholder="e.g. Jane" />
+      <div class="hint">Used in the email greeting (<code>Hi {name},</code>) and stored as <code>customer_contact_name</code>.</div>
+    </div>
+    <div class="field">
       <label for="contact">Customer contact email (optional)</label>
       <input id="contact" type="text" placeholder="e.g. jane@fortywinks.com.au" />
       <div class="hint">Becomes <code>customer_contact</code>. Leave blank for anonymous.</div>
@@ -117,27 +122,29 @@
 const FORM_BASE = 'https://robgilto.github.io/cscat/';
 
 const $ = (id) => document.getElementById(id);
-const fields = ['project', 'account', 'contact'];
+const fields = ['project', 'account', 'contact_name', 'contact'];
 
 function buildUrl() {
   const project = $('project').value.trim();
   const account = $('account').value.trim();
+  const contactName = $('contact_name').value.trim();
   const contact = $('contact').value.trim();
 
-  if (!project && !account && !contact) return '';
+  if (!project && !account && !contactName && !contact) return '';
 
   const params = new URLSearchParams();
   if (project) params.set('project', project);
   if (account) params.set('account', account);
+  if (contactName) params.set('contact_name', contactName);
   if (contact) params.set('contact', contact);
   const qs = params.toString();
   return qs ? `${FORM_BASE}?${qs}` : FORM_BASE;
 }
 
-function buildEmailHtml(url, account) {
-  const greeting = account ? `Hi ${account} team,` : 'Hi,';
+function buildEmailHtml(url, account, contactName) {
+  const greeting = contactName ? `Hi ${contactName},` : (account ? `Hi ${account} team,` : 'Hi,');
   return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,sans-serif;font-size:14px;line-height:1.5;color:#1a1a1a;max-width:640px">
-<tr><td style="background:#9CC9E8;padding:24px;text-align:center"><img src="https://robgilto.github.io/cscat/domo-logo.png" alt="Domo" width="80" height="80" style="display:inline-block;border:0"></td></tr>
+<tr><td style="background:#9CC9E8;padding:24px;text-align:center"><img src="https://robgilto.github.io/cscat/domo-logo.png" alt="Domo" width="80" height="80" style="display:inline-block;border:0;background:#ffffff;padding:12px 20px;border-radius:8px"></td></tr>
 <tr><td style="padding:24px 8px 0">
 <p style="margin:0 0 12px">${greeting}</p>
 <p style="margin:0 0 12px">Thank you for partnering with us on your Domo initiative. As we complete this phase of the engagement, we would greatly appreciate your feedback on both the delivery experience and the business impact of the solution.</p>
@@ -150,8 +157,8 @@ function buildEmailHtml(url, account) {
 </table>`;
 }
 
-function buildEmailText(url, account) {
-  const greeting = account ? `Hi ${account} team,` : 'Hi,';
+function buildEmailText(url, account, contactName) {
+  const greeting = contactName ? `Hi ${contactName},` : (account ? `Hi ${account} team,` : 'Hi,');
   return `${greeting}
 
 Thank you for partnering with us on your Domo initiative. As we complete this phase of the engagement, we would greatly appreciate your feedback on both the delivery experience and the business impact of the solution.
@@ -170,6 +177,7 @@ Senior Manager, Consulting & Partner Services, APAC`;
 function update() {
   const url = buildUrl();
   const account = $('account').value.trim();
+  const contactName = $('contact_name').value.trim();
   const urlOut = $('url-out');
   const open = $('open-link');
 
@@ -185,8 +193,8 @@ function update() {
   open.href = url;
   open.style.display = 'inline-block';
   open.textContent = 'Open preview ↗';
-  $('email-html-out').textContent = buildEmailHtml(url, account);
-  $('email-text-out').textContent = buildEmailText(url, account);
+  $('email-html-out').textContent = buildEmailHtml(url, account, contactName);
+  $('email-text-out').textContent = buildEmailText(url, account, contactName);
 }
 
 fields.forEach((id) => $(id).addEventListener('input', update));

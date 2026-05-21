@@ -8,3 +8,6 @@ dist
 .memsearch
 *.tsbuildinfo
 *.har
+.playwright-mcp/
+survey-with-name.png
+builder.png

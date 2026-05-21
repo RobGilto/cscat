@@ -88,6 +88,7 @@ export default function App() {
   const projectName = useMemo(() => getUrlParam('project'), []);
   const account = useMemo(() => getUrlParam('account'), []);
   const contact = useMemo(() => getUrlParam('contact'), []);
+  const contactName = useMemo(() => getUrlParam('contact_name'), []);
 
   const [form, setForm] = useState<FormState>({
     q1_overall: null,
@@ -119,6 +120,7 @@ export default function App() {
       project_name: projectName,
       customer_account: account,
       customer_contact: contact,
+      customer_contact_name: contactName,
       q1_overall: form.q1_overall,
       q2_value: form.q2_value,
       q3_alignment: form.q3_alignment,
@@ -192,6 +194,7 @@ export default function App() {
         </div>
       )}
 
+      {contactName && <p className="intro" style={{ marginBottom: 8 }}>Hi {contactName},</p>}
       <p className="intro">
         Thank you for partnering with us on your Domo initiative. As we complete this phase of the engagement, we would
         greatly appreciate your feedback on both the delivery experience and the business impact of the solution. This
