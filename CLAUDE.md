@@ -109,7 +109,8 @@ Customer email
 | `submitted_at` | datetime | ISO timestamp, client-set |
 | `project_name` | string | from `?project=` |
 | `customer_account` | string | from `?account=` |
-| `customer_contact` | string | from `?contact=` |
+| `customer_contact` | string | from `?contact=` (email) |
+| `customer_contact_name` | string | from `?contact_name=` (used in greeting) |
 | `q1_overall` | long | 1-5 |
 | `q2_value` | long | 1-5 |
 | `q3_alignment` | long | 1-5 |
@@ -130,9 +131,10 @@ Customer email
 
 ### Phase 2 — Domo backend (DONE)
 - [x] JSON Webhook Connector created (Append, no secret/flattening)
-- [x] DataSet `apac_csat_responses` — ID `9c5e6633-c03f-41af-927d-748e6892c088`
+- [x] DataSet `apac_csat_responses` v1 — ID `9c5e6633-c03f-41af-927d-748e6892c088` (DEPRECATED 2026-05-22 — schema missed `customer_contact_name`)
+- [x] DataSet `apac_csat_responses` v2 — ID `eee8618f-7a29-49b0-bb45-4357150ffd74` (created 2026-05-22, full schema incl. `customer_contact_name`). Webhook URL rotated.
 - [x] Webhook URL captured (stored in GH secret + .env.local, NOT committed)
-- [x] curl smoke test → 200, row lands
+- [x] curl smoke test → 200, row lands (v2 verified 2026-05-22)
 
 ### Phase 3 — Deploy (DONE)
 - [x] GitHub repo `RobGilto/cscat` (public)
@@ -145,6 +147,16 @@ Customer email
 ### Known constraints
 - Connector does not auto-materialize on POST. Schedule a run interval (15 min recommended) on DataSet settings, or manual Run.
 - `no-cors` mode = fire-and-forget, app cannot detect server failure. Acceptable for pilot. Cloudflare Worker proxy needed for real error handling.
+
+### Phase 3.5 — Paul feedback round 1 (DONE 2026-05-22)
+- [x] Added `contact_name` URL param → survey greets "Hi {name}," above intro
+- [x] Builder: new "Customer contact name" input; greeting prefers contact name → fallback "Hi {account} team," → fallback "Hi,"
+- [x] Logo white rounded box on blue band (survey + builder + email `<img>`) — fixes blue-on-blue blend
+- [x] New DataSet `apac_csat_responses_v2` (ID `eee8618f-7a29-49b0-bb45-4357150ffd74`) w/ `customer_contact_name` column
+- [x] New webhook URL rotated into GH secret `VITE_WEBHOOK_URL` + `.env.local`
+- [x] v1 DataSet `9c5e6633-...` deprecated (schema missed contact_name)
+- [x] curl smoke test + end-to-end Playwright submit from live GH Pages → row lands in v2 w/ all fields incl. `customer_contact_name=Robert`
+- [x] Commits: `1fa9c8d` (code) — pushed main, GH Pages redeployed
 
 ### Phase 4 — Reporting
 - [ ] Build summary card: avg per question
@@ -178,4 +190,7 @@ Customer email
 | **Last Asana Sync** | 2026-05-01 14:40 |
 | **Asana Status** | open, unscheduled |
 | **Last Outbound** | — |
-| **Last Inbound** | — |
+| **Last Inbound** | 2026-05-21 — Paul Basterfield feedback (logo border, contact name, host on domo.domo) |
+| **Active DataSet** | `apac_csat_responses_v2` — ID `eee8618f-7a29-49b0-bb45-4357150ffd74` |
+| **Last E2E Test** | 2026-05-22 — live GH Pages submit, row landed in v2 |
+| **Pending feedback** | Host link builder on domo.domo (custom app port) — Phase 6 |
