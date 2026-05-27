@@ -26,7 +26,7 @@ function greeting(account: string, contactName: string): string {
 function buildEmailHtml(url: string, account: string, contactName: string): string {
   const g = greeting(account, contactName);
   return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,sans-serif;font-size:14px;line-height:1.5;color:#1a1a1a;max-width:640px">
-<tr><td style="background:#9CC9E8;padding:24px;text-align:center"><img src="https://robgilto.github.io/cscat/domo-logo.png" alt="Domo" width="80" height="80" style="display:inline-block;border:0;background:#ffffff;padding:12px 20px;border-radius:8px"></td></tr>
+<tr><td style="background:#9CC9E8;padding:32px 24px;text-align:center"><table align="center" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;background:#ffffff;border-radius:8px"><tr><td style="padding:18px 36px;text-align:center"><img src="https://robgilto.github.io/cscat/domo-logo.png" alt="Domo" width="120" style="display:block;border:0;height:auto"></td></tr></table></td></tr>
 <tr><td style="padding:24px 8px 0">
 <p style="margin:0 0 12px">${g}</p>
 <p style="margin:0 0 12px">Thank you for partnering with us on your Domo initiative. As we complete this phase of the engagement, we would greatly appreciate your feedback on both the delivery experience and the business impact of the solution.</p>
