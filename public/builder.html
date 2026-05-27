@@ -229,9 +229,26 @@ document.querySelectorAll('[data-copy-html]').forEach((btn) => {
       btn.classList.add('copied');
       setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1500);
     } catch (e) {
+      // Fallback: render HTML into contenteditable + execCommand('copy')
+      // preserves text/html MIME so Outlook renders styled email
       try {
-        await navigator.clipboard.writeText(html);
-        btn.textContent = 'Copied (plain HTML) ✓';
+        const container = document.createElement('div');
+        container.contentEditable = 'true';
+        container.innerHTML = html;
+        container.style.position = 'fixed';
+        container.style.left = '-9999px';
+        container.style.top = '0';
+        document.body.appendChild(container);
+        const range = document.createRange();
+        range.selectNodeContents(container);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        const ok = document.execCommand('copy');
+        sel.removeAllRanges();
+        document.body.removeChild(container);
+        if (!ok) throw new Error('execCommand failed');
+        btn.textContent = 'Copied as rich HTML ✓';
         btn.classList.add('copied');
         setTimeout(() => { btn.textContent = 'Copy as rich HTML'; btn.classList.remove('copied'); }, 1500);
       } catch (e2) {

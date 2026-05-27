@@ -12,7 +12,7 @@
 | **Requestor** | Paul Basterfield — Senior Manager, Consulting & Partner Services, APAC |
 | **Status** | Not started — scoping |
 | **Created** | 2026-04-17 |
-| **Last Modified** | 2026-05-22 |
+| **Last Modified** | 2026-05-27 |
 | **Due** | none set |
 
 ## Goal
@@ -158,6 +158,21 @@ Customer email
 - [x] curl smoke test + end-to-end Playwright submit from live GH Pages → row lands in v2 w/ all fields incl. `customer_contact_name=Robert`
 - [x] Commits: `1fa9c8d` (code) — pushed main, GH Pages redeployed
 
+### Phase 3.6 — Domo custom app port (IN PROGRESS 2026-05-27)
+- [x] Scaffold `builder-app/` via `da new builder-app -p npm` (Vite + React 18 + TS + @domoinc/vite-react-template)
+- [x] Strip Counter + Redux scaffold (not needed for pure UI)
+- [x] Port `builder.html` → `src/components/App/App.tsx` (React + useMemo/useState, clipboard fallback via execCommand)
+- [x] Logo asset bundled (`public/static/domo-logo.png`)
+- [x] `manifest.json` set: name="CSAT Link Builder", fullpage=true, size 8x12, no datasets/AppDB
+- [x] `vite build` clean — 8.75 KB app + 140 KB vendor (gzip ~48 KB)
+- [x] Local Playwright test: filled state renders, URL builds, greeting fallback works
+- [x] Removed interactive `da apply-manifest` prebuild/prestart hooks (block headless build)
+- [ ] `domo login domo.domo.com` + `domo publish` (run from `builder-app/build/`)
+- [ ] Copy design `id` from `build/manifest.json` → `public/manifest.json` (first-publish gotcha)
+- [ ] Create App Studio page on domo.domo, embed app
+- [ ] Share page with Paul + APAC team
+- [ ] Deprecate GH Pages `builder.html` (or keep as backup)
+
 ### Phase 4 — Reporting
 - [ ] Build summary card: avg per question
 - [ ] Trend card: monthly avg
@@ -193,4 +208,5 @@ Customer email
 | **Last Inbound** | 2026-05-21 — Paul Basterfield feedback (logo border, contact name, host on domo.domo) |
 | **Active DataSet** | `apac_csat_responses_v2` — ID `eee8618f-7a29-49b0-bb45-4357150ffd74` |
 | **Last E2E Test** | 2026-05-22 — live GH Pages submit, row landed in v2 |
-| **Pending feedback** | Host link builder on domo.domo (custom app port) — Phase 6 |
+| **Pending feedback** | Host link builder on domo.domo (custom app port) — Phase 3.6 in progress, awaiting `domo publish` |
+| **Builder app path** | `builder-app/` — Domo Pro Code app, builds clean |
