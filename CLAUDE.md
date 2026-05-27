@@ -167,11 +167,14 @@ Customer email
 - [x] `vite build` clean — 8.75 KB app + 140 KB vendor (gzip ~48 KB)
 - [x] Local Playwright test: filled state renders, URL builds, greeting fallback works
 - [x] Removed interactive `da apply-manifest` prebuild/prestart hooks (block headless build)
-- [ ] `domo login domo.domo.com` + `domo publish` (run from `builder-app/build/`)
-- [ ] Copy design `id` from `build/manifest.json` → `public/manifest.json` (first-publish gotcha)
-- [ ] Create App Studio page on domo.domo, embed app
+- [x] `domo login domo.domo.com` + `domo publish` (run from `builder-app/build/`) — design `142385af-c336-4e64-98ea-dc4f22d6468f`
+- [x] Copy design `id` from `build/manifest.json` → `public/manifest.json` (first-publish gotcha)
+- [x] Page on domo.domo created — pageId `1915629533` "CSAT Link Builder"
+- [x] Logo: nested-table white card pattern (Gmail/Outlook safe); 120px wide
+- [x] Clipboard rich-HTML fallback: contenteditable + execCommand when ClipboardItem fails
+- [x] **GH Pages `builder.html` removed** — builder now lives only on domo.domo
+- [ ] Add card to page via Domo UI (Send to... from asset library)
 - [ ] Share page with Paul + APAC team
-- [ ] Deprecate GH Pages `builder.html` (or keep as backup)
 
 ### Phase 4 — Reporting
 - [ ] Build summary card: avg per question
