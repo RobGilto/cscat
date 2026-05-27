@@ -1,5 +1,6 @@
 node_modules
 dist
+build
 .env
 .env.local
 .DS_Store
@@ -9,5 +10,7 @@ dist
 *.tsbuildinfo
 *.har
 .playwright-mcp/
-survey-with-name.png
-builder.png
+*.png
+!public/domo-logo.png
+!builder-app/public/static/*.png
+!builder-app/public/thumbnail.png
